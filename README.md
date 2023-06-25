@@ -1,8 +1,8 @@
 # carstream
 
-[![Build](https://github.com/alanshaw/cardex/actions/workflows/build.yml/badge.svg)](https://github.com/alanshaw/cardex/actions/workflows/build.yml)
+[![Build](https://github.com/alanshaw/carstream/actions/workflows/build.yml/badge.svg)](https://github.com/alanshaw/carstream/actions/workflows/build.yml)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-[![npm bundle size](https://img.shields.io/bundlephobia/minzip/cardex)](https://bundlephobia.com/package/cardex)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/carstream)](https://bundlephobia.com/package/carstream)
 
 Web stream CAR reader and writer.
 
