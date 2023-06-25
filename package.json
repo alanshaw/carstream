@@ -69,5 +69,16 @@
     "ignore": [
       "*.ts"
     ]
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alanshaw/carstream.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alanshaw/carstream/issues"
+  },
+  "homepage": "https://github.com/alanshaw/carstream#readme"
 }
