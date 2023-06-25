@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2020", "DOM"],
+    "allowJs": true,
+    "checkJs": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": false,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strictFunctionTypes": false,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "strictBindCallApply": true,
+    "strict": true,
+    "alwaysStrict": true,
+    "esModuleInterop": true,
+    "target": "ES2018",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "types",
+    "skipLibCheck": true,
+    "stripInternal": true,
+    "resolveJsonModule": true,
+    "emitDeclarationOnly": true,
+    "baseUrl": ".",
+    "paths": {
+      "carstream": [
+        "src"
+      ]
+    }
+  },
+  "include": [
+    "src",
+    "test"
+  ],
+  "exclude": [
+    "node_modules",
+    "esm",
+    "cjs",
+    "test"
+  ],
+  "compileOnSave": false
+}

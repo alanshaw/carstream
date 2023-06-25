@@ -1,0 +1,73 @@
+{
+  "name": "carstream",
+  "version": "0.0.0",
+  "description": "Web stream CAR reader and writer.",
+  "main": "src/index.js",
+  "type": "module",
+  "types": "types/index.d.ts",
+  "files": [
+    "src",
+    "types"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "test": "entail",
+    "coverage": "c8 npm test",
+    "lint": "standard"
+  },
+  "keywords": [
+    "CAR",
+    "stream",
+    "web",
+    "CID",
+    "IPLD"
+  ],
+  "author": "Alan Shaw",
+  "license": "Apache-2.0 OR MIT",
+  "exports": {
+    ".": {
+      "import": "./src/index.js"
+    },
+    "./api": {
+      "import": "./src/api.js"
+    },
+    "./reader": {
+      "import": "./src/reader.js"
+    },
+    "./writer": {
+      "import": "./src/writer.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "types/*"
+      ],
+      "reader": [
+        "types/reader.d.ts"
+      ],
+      "writer": [
+        "types/writer.d.ts"
+      ],
+      "types/*": [
+        "types/*"
+      ]
+    }
+  },
+  "dependencies": {
+    "@ipld/dag-cbor": "^9.0.3",
+    "multiformats": "^12.0.1",
+    "uint8arraylist": "^2.4.3"
+  },
+  "devDependencies": {
+    "c8": "^8.0.0",
+    "entail": "^2.0.2",
+    "standard": "^17.1.0",
+    "typescript": "^5.1.3"
+  },
+  "standard": {
+    "ignore": [
+      "*.ts"
+    ]
+  }
+}
