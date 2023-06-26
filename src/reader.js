@@ -30,6 +30,7 @@ export class CARReaderStream extends TransformStream {
   constructor (writableStrategy, readableStrategy) {
     const buffer = new Uint8ArrayList()
     let offset = 0
+    let prevOffset = offset
     let wanted = 8
     let state = State.ReadHeaderLength
 
@@ -45,25 +46,30 @@ export class CARReaderStream extends TransformStream {
           if (state === State.ReadHeaderLength) {
             const [length, bytes] = decodeVarint(buffer)
             buffer.consume(bytes)
+            prevOffset = offset
             offset += bytes
             state = State.ReadHeader
             wanted = length
           } else if (state === State.ReadHeader) {
-            const header = decodeDagCBOR(buffer.slice(0, wanted))
+            const header = decodeDagCBOR(buffer.subarray(0, wanted))
             resolveHeader && resolveHeader(header)
             buffer.consume(wanted)
+            prevOffset = offset
             offset += wanted
             state = State.ReadBlockLength
             wanted = 8
           } else if (state === State.ReadBlockLength) {
             const [length, bytes] = decodeVarint(buffer)
             buffer.consume(bytes)
+            prevOffset = offset
             offset += bytes
             state = State.ReadBlock
             wanted = length
           } else if (state === State.ReadBlock) {
-            const _offset = offset
-            const length = wanted
+            const _offset = prevOffset
+            const length = offset - prevOffset + wanted
+
+            prevOffset = offset
             /** @type {import('multiformats').UnknownLink} */
             let cid
             if (buffer.get(0) === CIDV0_BYTES.SHA2_256 && buffer.get(1) === CIDV0_BYTES.LENGTH) {
@@ -90,11 +96,12 @@ export class CARReaderStream extends TransformStream {
               offset += multihashBytes
             }
 
-            const blockBytes = wanted - (offset - _offset)
+            const blockBytes = wanted - (offset - prevOffset)
             const bytes = buffer.subarray(0, blockBytes)
             controller.enqueue({ cid, bytes, offset: _offset, length })
 
             buffer.consume(blockBytes)
+            prevOffset = offset
             offset += blockBytes
             state = State.ReadBlockLength
             wanted = 8

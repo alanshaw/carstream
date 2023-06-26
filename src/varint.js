@@ -37,7 +37,7 @@ export const decode = (buf, offset) => {
   const l = buf.length
 
   do {
-    if (counter >= l) throw new RangeError('Could not decode varint')
+    if (counter >= l || shift > 49) throw new RangeError('Could not decode varint')
     b = buf.get(counter++)
     res += shift < 28
       ? (b & REST) << shift
