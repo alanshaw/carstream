@@ -73,22 +73,22 @@ export class CARReaderStream extends TransformStream {
               cid = createLegacyLink(multihash)
               buffer.consume(34)
               offset += 34
+            } else {
+              const [version, versionBytes] = decodeVarint(buffer)
+              if (version !== 1) throw new Error(`unexpected CID version (${version})`)
+              buffer.consume(versionBytes)
+              offset += versionBytes
+
+              const [codec, codecBytes] = decodeVarint(buffer)
+              buffer.consume(codecBytes)
+              offset += codecBytes
+
+              const multihashBytes = getMultihashLength(buffer)
+              const multihash = decodeDigest(buffer.subarray(0, multihashBytes))
+              cid = createLink(codec, multihash)
+              buffer.consume(multihashBytes)
+              offset += multihashBytes
             }
-
-            const [version, versionBytes] = decodeVarint(buffer)
-            if (version !== 1) throw new Error(`unexpected CID version (${version})`)
-            buffer.consume(versionBytes)
-            offset += versionBytes
-
-            const [codec, codecBytes] = decodeVarint(buffer)
-            buffer.consume(codecBytes)
-            offset += codecBytes
-
-            const multihashBytes = getMultihashLength(buffer)
-            const multihash = decodeDigest(buffer.subarray(0, multihashBytes))
-            cid = createLink(codec, multihash)
-            buffer.consume(multihashBytes)
-            offset += multihashBytes
 
             const blockBytes = wanted - (offset - _offset)
             const bytes = buffer.subarray(0, blockBytes)
