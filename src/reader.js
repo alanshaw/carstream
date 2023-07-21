@@ -25,7 +25,11 @@ export class CARReaderStream extends TransformStream {
 
   /**
    * @param {QueuingStrategy<Uint8Array>} [writableStrategy]
+   * An object that optionally defines a queuing strategy for the stream.
    * @param {QueuingStrategy<import('./api').Block & import('./api').Position>} [readableStrategy]
+   * An object that optionally defines a queuing strategy for the stream.
+   * Defaults to a CountQueuingStrategy with highWaterMark of `1` to allow
+   * `getHeader` to be called before the stream is consumed.
    */
   constructor (writableStrategy, readableStrategy) {
     const buffer = new Uint8ArrayList()
@@ -37,8 +41,6 @@ export class CARReaderStream extends TransformStream {
     /** @type {(value: import('./api').CARHeader) => void} */
     let resolveHeader
     const headerPromise = new Promise(resolve => { resolveHeader = resolve })
-
-    readableStrategy = readableStrategy ?? new CountQueuingStrategy({ highWaterMark: 1 })
 
     super({
       transform (chunk, controller) {
@@ -115,14 +117,13 @@ export class CARReaderStream extends TransformStream {
           controller.error(new Error('unexpected end of data'))
         }
       }
-    }, writableStrategy, readableStrategy)
+    }, writableStrategy, readableStrategy ?? new CountQueuingStrategy({ highWaterMark: 1 }))
 
     this.#headerPromise = headerPromise
   }
 
   /**
-   * Get the decoded CAR header. You must begin consuming from the stream to
-   * resolve the promise.
+   * Get the decoded CAR header.
    */
   getHeader () {
     return this.#headerPromise
