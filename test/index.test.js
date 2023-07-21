@@ -60,5 +60,35 @@ export const test = {
           assert.equal(block.length, lengths.get(block.cid), 'length should be equal')
         }
       }))
+  },
+
+  'should get header without consuming the stream': async assert => {
+    const root = await Block.encode({ value: {}, codec: dagCBOR, hasher })
+
+    const blocks = new ReadableStream({
+      pull (controller) {
+        controller.enqueue(root)
+        controller.close()
+      }
+    })
+
+    const chunks = []
+    await blocks
+      .pipeThrough(new CARWriterStream([root.cid]))
+      .pipeTo(new WritableStream({ write: c => { chunks.push(c) } }))
+
+    const bytes = new ReadableStream({
+      pull (controller) {
+        const chunk = chunks.shift()
+        if (!chunk) return controller.close()
+        controller.enqueue(chunk)
+      }
+    })
+
+    const carStream = new CARReaderStream()
+    bytes.pipeThrough(carStream)
+
+    const header = await carStream.getHeader()
+    assert.equal(String(header.roots[0]), root.cid.toString())
   }
 }

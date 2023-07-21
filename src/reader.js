@@ -38,6 +38,8 @@ export class CARReaderStream extends TransformStream {
     let resolveHeader
     const headerPromise = new Promise(resolve => { resolveHeader = resolve })
 
+    readableStrategy = readableStrategy ?? new CountQueuingStrategy({ highWaterMark: 1 })
+
     super({
       transform (chunk, controller) {
         buffer.append(chunk)
