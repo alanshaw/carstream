@@ -26,16 +26,24 @@
   "license": "Apache-2.0 OR MIT",
   "exports": {
     ".": {
-      "import": "./src/index.js"
+      "import": "./src/index.js",
+      "types": "./types/index.d.ts"
     },
     "./api": {
-      "import": "./src/api.js"
+      "import": "./src/api.js",
+      "types": "./types/api.d.ts"
     },
     "./reader": {
-      "import": "./src/reader.js"
+      "import": "./src/reader.js",
+      "types": "./types/reader.d.ts"
+    },
+    "./varint": {
+      "import": "./src/varint.js",
+      "types": "./types/varint.d.ts"
     },
     "./writer": {
-      "import": "./src/writer.js"
+      "import": "./src/writer.js",
+      "types": "./types/writer.d.ts"
     }
   },
   "typesVersions": {
