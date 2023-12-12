@@ -1,6 +1,6 @@
 {
   "name": "carstream",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Web stream CAR reader and writer.",
   "main": "src/index.js",
   "type": "module",
