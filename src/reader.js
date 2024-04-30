@@ -18,15 +18,15 @@ const CIDV0_BYTES = {
   DAG_PB: 0x70
 }
 
-/** @extends {TransformStream<Uint8Array, import('./api').Block & import('./api').Position>} */
+/** @extends {TransformStream<Uint8Array, import('./api.js').Block & import('./api.js').Position>} */
 export class CARReaderStream extends TransformStream {
-  /** @type {Promise<import('./api').CARHeader>} */
+  /** @type {Promise<import('./api.js').CARHeader>} */
   #headerPromise
 
   /**
    * @param {QueuingStrategy<Uint8Array>} [writableStrategy]
    * An object that optionally defines a queuing strategy for the stream.
-   * @param {QueuingStrategy<import('./api').Block & import('./api').Position>} [readableStrategy]
+   * @param {QueuingStrategy<import('./api.js').Block & import('./api.js').Position>} [readableStrategy]
    * An object that optionally defines a queuing strategy for the stream.
    * Defaults to a CountQueuingStrategy with highWaterMark of `1` to allow
    * `getHeader` to be called before the stream is consumed.
@@ -38,7 +38,7 @@ export class CARReaderStream extends TransformStream {
     let wanted = 8
     let state = State.ReadHeaderLength
 
-    /** @type {(value: import('./api').CARHeader) => void} */
+    /** @type {(value: import('./api.js').CARHeader) => void} */
     let resolveHeader
     const headerPromise = new Promise(resolve => { resolveHeader = resolve })
 
@@ -55,7 +55,7 @@ export class CARReaderStream extends TransformStream {
             state = State.ReadHeader
             wanted = length
           } else if (state === State.ReadHeader) {
-            const header = decodeDagCBOR(buffer.subarray(0, wanted))
+            const header = decodeDagCBOR(buffer.slice(0, wanted))
             resolveHeader && resolveHeader(header)
             buffer.consume(wanted)
             prevOffset = offset
@@ -102,7 +102,7 @@ export class CARReaderStream extends TransformStream {
 
             const blockBytes = wanted - (offset - prevOffset)
             const bytes = buffer.subarray(0, blockBytes)
-            controller.enqueue({ cid, bytes, offset: _offset, length })
+            controller.enqueue({ cid, bytes, offset: _offset, length, blockOffset: offset, blockLength: blockBytes })
 
             buffer.consume(blockBytes)
             prevOffset = offset

@@ -8,6 +8,8 @@ export interface Block {
 export interface Position {
   offset: number
   length: number
+  blockOffset: number
+  blockLength: number
 }
 
 export interface CARHeader {

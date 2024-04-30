@@ -42,11 +42,15 @@ export const test = {
 
   'should produce correct positions': async assert => {
     const offsets = new LinkMap()
+    const blockOffsets = new LinkMap()
     const lengths = new LinkMap()
+    const blockLengths = new LinkMap()
     const indexer = await CarIndexer.fromIterable(fs.createReadStream(fixture))
-    for await (const { cid, offset, length } of indexer) {
+    for await (const { cid, offset, length, blockOffset, blockLength } of indexer) {
       offsets.set(cid, offset)
       lengths.set(cid, length)
+      blockOffsets.set(cid, blockOffset)
+      blockLengths.set(cid, blockLength)
     }
 
     await Readable.toWeb(fs.createReadStream(fixture))
@@ -54,10 +58,10 @@ export const test = {
       .pipeThrough(new CARReaderStream())
       .pipeTo(new WritableStream({
         write (block) {
-          // @ts-expect-error
           assert.equal(block.offset, offsets.get(block.cid), 'offset should be equal')
-          // @ts-expect-error
           assert.equal(block.length, lengths.get(block.cid), 'length should be equal')
+          assert.equal(block.blockOffset, blockOffsets.get(block.cid), 'blockOffset should be equal')
+          assert.equal(block.blockLength, blockLengths.get(block.cid), 'blockLength should be equal')
         }
       }))
   },

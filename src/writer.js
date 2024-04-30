@@ -16,7 +16,7 @@ const encodeHeader = roots => {
 }
 
 /**
- * @param {import('./api').Block} block
+ * @param {import('./api.js').Block} block
  * @returns {Uint8Array}
  */
 const encodeBlock = block => {
@@ -28,11 +28,11 @@ const encodeBlock = block => {
   return bytes
 }
 
-/** @extends {TransformStream<import('./api').Block, Uint8Array>} */
+/** @extends {TransformStream<import('./api.js').Block, Uint8Array>} */
 export class CARWriterStream extends TransformStream {
   /**
    * @param {import('multiformats').UnknownLink[]} [roots]
-   * @param {QueuingStrategy<import('./api').Block>} [writableStrategy]
+   * @param {QueuingStrategy<import('./api.js').Block>} [writableStrategy]
    * @param {QueuingStrategy<Uint8Array>} [readableStrategy]
    */
   constructor (roots = [], writableStrategy, readableStrategy) {
