@@ -6,7 +6,7 @@ import { encode as encodeVarint } from './varint.js'
  * @param {import('multiformats').UnknownLink[]} roots
  * @returns {Uint8Array}
  */
-const encodeHeader = roots => {
+export const encodeHeader = roots => {
   const headerBytes = encodeCBOR({ version: 1, roots })
   const varintBytes = encodeVarint(headerBytes.length)
   const header = new Uint8Array(varintBytes.length + headerBytes.length)
@@ -19,7 +19,7 @@ const encodeHeader = roots => {
  * @param {import('./api.js').Block} block
  * @returns {Uint8Array}
  */
-const encodeBlock = block => {
+export const encodeBlock = block => {
   const varintBytes = encodeVarint(block.cid.bytes.length + block.bytes.length)
   const bytes = new Uint8Array(varintBytes.length + block.cid.bytes.length + block.bytes.length)
   bytes.set(varintBytes)
